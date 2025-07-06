@@ -75,7 +75,7 @@ app.get("/test-email", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: "DEVAPPS GROUP" <contact@devapps-group.tech>,
+      from: `"DEVAPPS GROUP" <contact@devapps-group.tech>`,
       to: "woovens@devapps-group.tech",
       subject: "TEST EMAIL",
       text: "This is a test from the contact form backend!"
