@@ -58,3 +58,32 @@ app.post("/contact", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
+app.get("/test-email", async (req, res) => {
+  try {
+    const accessToken = await getAccessToken();
+
+    let transporter = nodemailer.createTransport({
+      host: "smtp.office365.com",
+      port: 587,
+      secure: false,
+      auth: {
+        type: "OAuth2",
+        user: "woovens@devapps-group.tech",
+        accessToken: accessToken,
+      }
+    });
+
+    await transporter.sendMail({
+      from: "DEVAPPS GROUP" <contact@devapps-group.tech>,
+      to: "woovens@devapps-group.tech",
+      subject: "TEST EMAIL",
+      text: "This is a test from the contact form backend!"
+    });
+
+    res.send("Test email sent!");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error sending email");
+  }
+});
