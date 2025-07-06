@@ -1,0 +1,26 @@
+{
+  "name": "contact-form-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hakunawoo/contact-form-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hakunawoo/contact-form-backend/issues"
+  },
+  "homepage": "https://github.com/Hakunawoo/contact-form-backend#readme",
+  "dependencies": {
+    "@azure/identity": "^4.10.2",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.4"
+  }
+}
