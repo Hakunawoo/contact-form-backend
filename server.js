@@ -42,7 +42,7 @@ app.post("/contact", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: `"${name}" <${email}>`,
+      from: `"${name}" <contact@devapps-group.tech>`,
       to: userEmail,
       subject: "New Contact Form Message",
       text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`
