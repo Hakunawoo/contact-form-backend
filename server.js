@@ -57,7 +57,7 @@ ${message}
   };
 
   await axios.post(
-    `https://graph.microsoft.com/v1.0/users/sendMail`,
+    `https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail`,
     payload,
     {
       headers: {
@@ -113,7 +113,7 @@ app.get("/test-email", async (req, res) => {
     };
 
     await axios.post(
-      `https://graph.microsoft.com/v1.0/users/sendMail`,
+      `https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail`,
       payload,
       {
         headers: {
