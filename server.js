@@ -39,6 +39,12 @@ ${message}
         contentType: "Text",
         content: emailBody
       },
+      from: {
+          emailAddress: {
+            address: userEmail,
+            name: "DEVAPPS GROUP"
+          }
+        },
       toRecipients: [
         {
           emailAddress: {
@@ -55,7 +61,7 @@ ${message}
     payload,
     {
       headers: {
-        Authorization:  `Bearer ${token}`,
+        Authorization:  `Bearer ${accesstoken}`,
         "Content-Type": "application/json"
       }
     }
