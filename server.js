@@ -39,12 +39,6 @@ ${message}
         contentType: "Text",
         content: emailBody
       },
-      from: {
-        emailAddress: {
-          address: userEmail,
-          name: "DEVAPPS GROUP"
-        }
-      },
       toRecipients: [
         {
           emailAddress: {
