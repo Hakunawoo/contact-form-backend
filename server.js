@@ -1,5 +1,5 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
+const axios = require("axios");
 const { ClientSecretCredential } = require("@azure/identity");
 require("dotenv").config();
 
@@ -24,66 +24,116 @@ async function getAccessToken() {
   return token.token;
 }
 
+async function sendMailViaGraph(name, senderEmail, message, token) {
+  const emailBody = `
+Name: ${name}
+Email: ${senderEmail}
+Message:
+${message}
+`;
+
+  const payload = {
+    message: {
+      subject: "New Contact Form Message",
+      body: {
+        contentType: "Text",
+        content: emailBody
+      },
+      from: {
+        emailAddress: {
+          address: userEmail,
+          name: "DEVAPPS GROUP"
+        }
+      },
+      toRecipients: [
+        {
+          emailAddress: {
+            address: userEmail
+          }
+        }
+      ]
+    },
+    saveToSentItems: "true"
+  };
+
+  await axios.post(
+    https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail,
+    payload,
+    {
+      headers: {
+        Authorization: Bearer ${token},
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
+
 app.post("/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
   try {
-    const accessToken = await getAccessToken();
+    const token = await getAccessToken();
 
-    let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      secure: false,
-      auth: {
-        type: "OAuth2",
-        user: userEmail,
-        accessToken: accessToken,
-      }
-    });
-
-    await transporter.sendMail({
-      from: `"DEVAPPS GROUP" <contact@devapps-group.tech>`,
-      to: userEmail,
-      subject: "New Contact Form Message",
-      text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`
-    });
+    await sendMailViaGraph(name, email, message, token);
 
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+    console.error("Graph API error:", error.response?.data || error.message);
+    res.status(500).send("Error sending email via Graph API");
   }
-});
-
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
 });
 
 app.get("/test-email", async (req, res) => {
   try {
-    const accessToken = await getAccessToken();
+    const token = await getAccessToken();
 
-    let transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 587,
-      secure: false,
-      auth: {
-        type: "OAuth2",
-        user: "woovens@devapps-group.tech",
-        accessToken: accessToken,
+    // Send a simple test message
+    const payload = {
+      message: {
+        subject: "TEST EMAIL from Graph API",
+        body: {
+          contentType: "Text",
+          content: "This is a test from the DEVAPPS backend using Microsoft Graph API!"
+        },
+        from: {
+          emailAddress: {
+            address: userEmail,
+            name: "DEVAPPS GROUP"
+          }
+        },
+        toRecipients: [
+          {
+            emailAddress: {
+              address: userEmail
+            }
+          }
+        ]
+      },
+      saveToSentItems: "true"
+    };
+
+    await axios.post(
+      https://graph.microsoft.com/v1.0/users/${userEmail}/sendMail,
+      payload,
+      {
+        headers: {
+          Authorization: Bearer ${token},
+          "Content-Type": "application/json"
+        }
       }
-    });
+    );
 
-    await transporter.sendMail({
-      from: `"DEVAPPS GROUP" <contact@devapps-group.tech>`,
-      to: "woovens@devapps-group.tech",
-      subject: "TEST EMAIL",
-      text: "This is a test from the contact form backend!"
-    });
-
-    res.send("Test email sent!");
+    console.log("Test email sent via Graph API!");
+    res.send("Test email sent via Graph API!");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error sending email");
+    console.error("Graph API error:", error.response?.data || error.message);
+    res.status(500).send("Error sending test email via Graph API");
   }
+});
+
+// IMPORTANT: Use Render-assigned PORT if available
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
