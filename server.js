@@ -61,7 +61,7 @@ ${message}
     payload,
     {
       headers: {
-        Authorization: Bearer ${token},
+        Authorization:  `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     }
@@ -117,7 +117,7 @@ app.get("/test-email", async (req, res) => {
       payload,
       {
         headers: {
-          Authorization: Bearer ${token},
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         }
       }
