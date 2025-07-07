@@ -19,7 +19,7 @@ const credential = new ClientSecretCredential(
 
 async function getAccessToken() {
   const token = await credential.getToken(
-    "https://outlook.office365.com/.default"
+    "https://graph.microsoft.com/.default"
   );
   return token.token;
 }
